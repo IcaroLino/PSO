@@ -54,6 +54,10 @@ module.exports = {
         'eol-last': [
             'error',
             'always'
+        ],
+        'arrow-parens': [
+            'error',
+            'always'
         ]
     }
 };
