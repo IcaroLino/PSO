@@ -40,12 +40,34 @@ export default class Particle {
         } else if ((Particle._optimizationType === 'max' && performance > personalBestValue)
             || (Particle._optimizationType === 'min' && performance < personalBestValue)) {
             this._personalBest = this._position;
-        } else {
-            throw new Error('checkPerformance Error!'); //Just a test, Remove Later
         }
     }
 
-    public get globalBest() {
+    private updateVelocity(w: number, c1: number, c2: number): void {
+        this._velocity = this._velocity.map((_, index) => {
+            const newVelocity = (w * this._velocity[index])
+                + c1 * Math.random() * (this._personalBest[index] - this._position[index])
+                + c2 * Math.random() * (Particle._globalBest[index] - this._position[index]);
+
+            const maxVelocity = Math.abs(this._position[index] * 0.1);
+
+            if (Math.abs(newVelocity) > maxVelocity) return Math.sign(newVelocity) * maxVelocity;
+            return newVelocity;
+        });
+    }
+
+    public updatePosition(w: number, c1: number, c2: number): void {
+        this.updateVelocity(w, c1, c2);
+        this._position = this._position.map((_, index) => {
+            const newPosition = this._velocity[index] + this._position[index];
+            if (newPosition > Particle._maxPosition[index]) return Particle._maxPosition[index];
+            if (newPosition < Particle._minPosition[index]) return Particle._minPosition[index];
+            return newPosition;
+        });
+        this.checkPerformance();
+    }
+
+    public static get globalBest(): number[] {
         return Particle._globalBest;
     }
 
