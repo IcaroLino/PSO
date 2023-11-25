@@ -4,8 +4,8 @@ import Particle from '../models/Particle';
 
 export default class PSO {
 
-    private swarmHistory: Array<Particle[]> = [];
-    private globalBestHistory: Array<number[]> = [];
+    private _swarmHistory: Array<Particle[]> = [];
+    private _globalBestHistory: Array<number[]> = [];
 
     private static _objectiveFunction: ObjectiveFn;
     private static _optimizationType: OptType;
@@ -24,25 +24,37 @@ export default class PSO {
         Particle.setSwarmParams(PSO._objectiveFunction, PSO._optimizationType, PSO._minPosition, PSO._maxPosition);
         const swarm = new Array(swarmQuantity).fill(undefined).map(() => new Particle(dim));
 
-        this.swarmHistory.push(swarm);
-        this.globalBestHistory.push(Particle.globalBest);
+        this._swarmHistory.push(swarm);
+        this._globalBestHistory.push(Particle.globalBest);
 
         for (let i = 0; i < generations; i++) {
             const w = wMax - i * ((wMax - wMin) / (generations - 1));
 
             swarm.forEach((individual) => individual.updatePosition(w, c1, c2));
 
-            this.swarmHistory.push(swarm);
-            this.globalBestHistory.push(Particle.globalBest);
+            this._swarmHistory.push(swarm);
+            this._globalBestHistory.push(Particle.globalBest);
         }
     }
 
+    public printGlobalBestHistory(decimalPrecision: number): void {
+        this._globalBestHistory.forEach((history, gen) => {
+            console.log(`Generation ${gen}: (Position) ${history.map((h) => ' ' + h.toFixed(decimalPrecision))} | `
+                + `(Objetive): ${PSO._objectiveFunction.objectiveFunction(...history).toFixed(decimalPrecision)}`);
+        });
+    }
+
+    public get getSwarmLog(): string {
+        return this._swarmHistory.map((row, gen) => `Generation ${gen} \n`
+            + row.map((particle, id) => `Particle ${id}: ` + JSON.stringify(particle)).join('\n')).join('\n');
+    }
+
     public get getSwarmHistory(): Array<Particle[]> {
-        return this.swarmHistory;
+        return this._swarmHistory;
     }
 
     public get getGlobalBestHistory(): Array<number[]> {
-        return this.globalBestHistory;
+        return this._globalBestHistory;
     }
 
     public static setSwarmParams(objectiveFunction: ObjectiveFn, optimizationType: OptType, minPosition: number[], maxPosition: number[]): void {
