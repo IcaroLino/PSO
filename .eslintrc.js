@@ -50,6 +50,10 @@ module.exports = {
         'max-len': [
             'error',
             150,
+        ],
+        'eol-last': [
+            'error',
+            'always'
         ]
     }
 };
