@@ -4,7 +4,7 @@ import Particle from '../models/Particle';
 
 export default class PSO {
 
-    private _swarmHistory: Array<Particle[]> = [];
+    private _swarmLog: Array<string[]> = [];
     private _globalBestHistory: Array<number[]> = [];
 
     private static _objectiveFunction: ObjectiveFn;
@@ -23,16 +23,16 @@ export default class PSO {
     ) {
         Particle.setSwarmParams(PSO._objectiveFunction, PSO._optimizationType, PSO._minPosition, PSO._maxPosition);
         const swarm = new Array(swarmQuantity).fill(undefined).map(() => new Particle(dim));
-
-        this._swarmHistory.push(swarm);
+        
+        this._swarmLog.push(swarm.map((particle) => JSON.stringify(particle)));
         this._globalBestHistory.push(Particle.globalBest);
-
+        
         for (let i = 0; i < generations; i++) {
             const w = wMax - i * ((wMax - wMin) / (generations - 1));
 
             swarm.forEach((individual) => individual.updatePosition(w, c1, c2));
 
-            this._swarmHistory.push(swarm);
+            this._swarmLog.push(swarm.map((particle) => JSON.stringify(particle)));
             this._globalBestHistory.push(Particle.globalBest);
         }
     }
@@ -45,12 +45,8 @@ export default class PSO {
     }
 
     public get getSwarmLog(): string {
-        return this._swarmHistory.map((row, gen) => `Generation ${gen} \n`
-            + row.map((particle, id) => `Particle ${id}: ` + JSON.stringify(particle)).join('\n')).join('\n');
-    }
-
-    public get getSwarmHistory(): Array<Particle[]> {
-        return this._swarmHistory;
+        return this._swarmLog.map((row, gen) => `Generation ${gen} \n`
+            + row.map((particle, id) => `Particle ${id}: ` + particle).join('\n')).join('\n');
     }
 
     public get getGlobalBestHistory(): Array<number[]> {
