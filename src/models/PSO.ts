@@ -1,5 +1,5 @@
 import OptType from '../enums/optimizationType';
-import ObjectiveFn from '../interfaces/objectiveFunction';
+import ObjectiveFunctionInterface from '../interfaces/objectiveFunctionInterface';
 import Particle from '../models/Particle';
 
 export default class PSO {
@@ -7,7 +7,7 @@ export default class PSO {
     private _swarmLog: Array<string[]> = [];
     private _globalBestHistory: Array<number[]> = [];
 
-    private static _objectiveFunction: ObjectiveFn;
+    private static _objectiveFunction: ObjectiveFunctionInterface;
     private static _optimizationType: OptType;
     private static _minPosition: number[];
     private static _maxPosition: number[];
@@ -53,7 +53,7 @@ export default class PSO {
         return this._globalBestHistory;
     }
 
-    public static setSwarmParams(objectiveFunction: ObjectiveFn, optimizationType: OptType, minPosition: number[], maxPosition: number[]): void {
+    public static setSwarmParams(objectiveFunction: ObjectiveFunctionInterface, optimizationType: OptType, minPosition: number[], maxPosition: number[]): void {
         PSO._objectiveFunction = objectiveFunction;
         PSO._optimizationType = optimizationType;
         PSO._minPosition = minPosition;

@@ -1,5 +1,5 @@
 import OptType from '../enums/optimizationType';
-import ObjectiveFn from '../interfaces/objectiveFunction';
+import ObjectiveFunctionInterface from '../interfaces/objectiveFunctionInterface';
 
 export default class Particle {
     private _velocity: number[];
@@ -7,7 +7,7 @@ export default class Particle {
     private _personalBest: number[];
     private static _globalBest: number[];
 
-    private static _objectiveFunction: ObjectiveFn;
+    private static _objectiveFunction: ObjectiveFunctionInterface;
     private static _optimizationType: OptType;
     private static _minPosition: number[];
     private static _maxPosition: number[];
@@ -71,7 +71,7 @@ export default class Particle {
         return Particle._globalBest;
     }
 
-    public static setSwarmParams(objectiveFunction: ObjectiveFn, optimizationType: OptType, minPosition: number[], maxPosition: number[]): void {
+    public static setSwarmParams(objectiveFunction: ObjectiveFunctionInterface, optimizationType: OptType, minPosition: number[], maxPosition: number[]): void {
         Particle._objectiveFunction = objectiveFunction;
         Particle._optimizationType = optimizationType;
         Particle._minPosition = minPosition;
